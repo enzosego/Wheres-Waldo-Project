@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import styled from 'styled-components';
 
 const StyledUl = styled.ul`
@@ -16,7 +16,13 @@ const StyledLi = styled.li`
   }
 `
 
-export const SelectorPopUp = ({clickPosition, charactersToFind, checkIfCharacterWasFound}) => {
+export const SelectorPopUp = ({clickPosition, charactersToFind,
+  checkIfCharacterWasFound, setClickedCharacter}) => {
+  useEffect(() => {
+    return () => 
+      setClickedCharacter('');
+  }, []);
+
   const [xAxis, yAxis] = clickPosition;
   const PopUp = styled.div`
     position: absolute;

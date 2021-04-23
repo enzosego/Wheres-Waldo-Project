@@ -24,26 +24,29 @@ firebase.initializeApp({
 //const firestore = firebase.firestore();
 
 const MainContainer = styled.section`
-  height: 100vh;
   width: 100vw;
-  background-size: cover;
+  position: relative;
+  background-size: 100% auto;
   background-repeat: no-repeat;
   background-image: url(${waldoExample});
   cursor: pointer;
 `;
 
-const checkCharacterPositions = (xAxis, yAxis) => {
-  if (xAxis > 480 && xAxis < 610 && yAxis > 205 && yAxis < 275)
-    return 'Yellow Ship';
-  if (xAxis > 258 && xAxis < 305 && yAxis > 465 && yAxis < 545)
-    return 'Waldo';
-  if (xAxis > 360 && xAxis < 385 && yAxis > 510 && yAxis < 530)
-    return 'Red Ball';
-} 
+const WaldoImage = styled.img`
+  width: 100vw;
+  visibility: hidden;
+`
+
+const CharacterTile = styled.div`
+  background: red;
+  opacity: 0;
+  position: absolute;
+`
 
 export const App = () => {
   const [HasUserClicked, setHasUserClicked] = useState(() => false);
   const [clickPosition, setClickPosition] = useState(() => [0, 0]);
+  const [clickedCharacter, setClickedCharacter] = useState(() => '');
   const [charactersToFind, setCharactersToFind] = useState(() => ['Yellow Ship', 'Waldo', 'Red Ball'])
   const [hasUserWon, setHasUserWon] = useState(() => false);
   const [currentTime, setCurrentTime] = useState(() => 0);
@@ -80,27 +83,43 @@ export const App = () => {
   }
 
   const checkIfCharacterWasFound = (pickedCharacter) => {
-    const [xAxis, yAxis] = clickPosition;
-    const characterFound = 
-      checkCharacterPositions(xAxis, yAxis);
-    if (characterFound === pickedCharacter) {
-      removeCharacterFromList(characterFound);
+    if (clickedCharacter === pickedCharacter) {
+      removeCharacterFromList(pickedCharacter);
       return;
     }
-    alert("Try again");
+    alert(clickedCharacter);
   }
 
   const handleClick = (e) => {
-    setClickPosition([e.clientX, e.clientY])
-    setHasUserClicked(prevValue => !prevValue)
+    if (hasUserWon) return;
+    setClickPosition([e.clientX, e.clientY]);
+    setHasUserClicked(!HasUserClicked);
   }
   return (
-    <MainContainer data-testid="main-container" onClick={handleClick}>
+    <MainContainer 
+      data-testid="main-container" 
+      onClick={handleClick}>
+      <WaldoImage 
+        data-testid="waldo-image"
+        src={`${waldoExample}`}/>
+      <CharacterTile 
+        style={{top:"48%", left:"20%", height:"10%", width:"4.2%"}} 
+        data-testid="waldo"
+        onClick={() => setClickedCharacter('Waldo')}/>
+      <CharacterTile 
+        style={{top:"52.4%", left:"28.3%", height:"2.5%", width:"2%"}} 
+        data-testid="red-ball"
+        onClick={() => setClickedCharacter('Red Ball')}/>
+      <CharacterTile 
+        style={{top:"22%", left:"37.5%", height:"7%", width:"11%"}} 
+        data-testid="yellow-ship"
+        onClick={() => setClickedCharacter('Yellow Ship')}/>
       {HasUserClicked && !hasUserWon
         ? <SelectorPopUp 
           clickPosition={clickPosition} 
           charactersToFind={charactersToFind}
-          checkIfCharacterWasFound={checkIfCharacterWasFound}/> 
+          checkIfCharacterWasFound={checkIfCharacterWasFound}
+          setClickedCharacter={setClickedCharacter}/> 
         : ""}
       {!hasUserWon
         ? <Timer currentTime={currentTime} />
