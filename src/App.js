@@ -82,13 +82,10 @@ export const App = () => {
     setCharactersToFind(charactersCopy);
   }
 
-  const checkIfCharacterWasFound = (pickedCharacter) => {
-    if (clickedCharacter === pickedCharacter) {
-      removeCharacterFromList(pickedCharacter);
-      return;
-    }
-    alert(clickedCharacter);
-  }
+  const checkIfCharacterWasFound = (pickedCharacter) => 
+    clickedCharacter === pickedCharacter 
+      ? removeCharacterFromList(pickedCharacter)
+      : alert('Try again');
 
   const handleClick = (e) => {
     if (hasUserWon) return;
@@ -99,9 +96,11 @@ export const App = () => {
     <MainContainer 
       data-testid="main-container" 
       onClick={handleClick}>
-      <WaldoImage 
-        data-testid="waldo-image"
-        src={`${waldoExample}`}/>
+      {!hasUserWon
+        ?<WaldoImage 
+          data-testid="waldo-image"
+          src={`${waldoExample}`}/>
+        : ''}
       <CharacterTile 
         style={{top:"48%", left:"20%", height:"10%", width:"4.2%"}} 
         data-testid="waldo"
