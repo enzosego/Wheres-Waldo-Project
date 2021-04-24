@@ -14,7 +14,9 @@ const StyledSection = styled.section`
 `;
 export const WinningScreen = ({currentTime, restartGame}) => {
   return(
-    <StyledSection onClick={restartGame}>
+    <StyledSection 
+      data-testid="winning-screen" 
+      onClick={restartGame}>
       <h1>You won!</h1>
       <h2>Your time is: {currentTime}</h2>
       <h5>Click anywhere to restart the game</h5>

@@ -16,7 +16,7 @@ const StyledTimer = styled.section`
 
 export const Timer = ({currentTime}) => {
   return(
-    <StyledTimer>
+    <StyledTimer data-testid="timer">
       <h1>{currentTime}</h1>
     </StyledTimer>
     )

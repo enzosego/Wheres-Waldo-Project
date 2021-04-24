@@ -18,7 +18,7 @@ firebase.initializeApp({
     storageBucket: "wheres-waldo-project.appspot.com",
     messagingSenderId: "320072162622",
     appId: "1:320072162622:web:5f4753a3e040b78c42606f"
-})
+});
 
 //const auth = firebase.auth();
 //const firestore = firebase.firestore();
@@ -35,13 +35,13 @@ const MainContainer = styled.section`
 const WaldoImage = styled.img`
   width: 100vw;
   visibility: hidden;
-`
+`;
 
 const CharacterTile = styled.div`
   background: red;
   opacity: 0;
   position: absolute;
-`
+`;
 
 export const App = () => {
   const [HasUserClicked, setHasUserClicked] = useState(() => false);
@@ -57,7 +57,7 @@ export const App = () => {
 
   useEffect(() => {
     setIntervalHandle(setInterval(increaseTimeByOne, 1000));
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (charactersToFind.length === 0) {
@@ -85,47 +85,45 @@ export const App = () => {
   const checkIfCharacterWasFound = (pickedCharacter) => 
     clickedCharacter === pickedCharacter 
       ? removeCharacterFromList(pickedCharacter)
-      : alert('Try again');
+      : '';
 
   const handleClick = (e) => {
     if (hasUserWon) return;
     setClickPosition([e.clientX, e.clientY]);
     setHasUserClicked(!HasUserClicked);
   }
-  return (
-    <MainContainer 
-      data-testid="main-container" 
-      onClick={handleClick}>
-      {!hasUserWon
-        ?<WaldoImage 
+  if (!hasUserWon)
+    return (
+      <MainContainer 
+        data-testid="main-container" 
+        onClick={handleClick}>
+        <WaldoImage 
           data-testid="waldo-image"
           src={`${waldoExample}`}/>
-        : ''}
-      <CharacterTile 
-        style={{top:"48%", left:"20%", height:"10%", width:"4.2%"}} 
-        data-testid="waldo"
-        onClick={() => setClickedCharacter('Waldo')}/>
-      <CharacterTile 
-        style={{top:"52.4%", left:"28.3%", height:"2.5%", width:"2%"}} 
-        data-testid="red-ball"
-        onClick={() => setClickedCharacter('Red Ball')}/>
-      <CharacterTile 
-        style={{top:"22%", left:"37.5%", height:"7%", width:"11%"}} 
-        data-testid="yellow-ship"
-        onClick={() => setClickedCharacter('Yellow Ship')}/>
-      {HasUserClicked && !hasUserWon
-        ? <SelectorPopUp 
-          clickPosition={clickPosition} 
-          charactersToFind={charactersToFind}
-          checkIfCharacterWasFound={checkIfCharacterWasFound}
-          setClickedCharacter={setClickedCharacter}/> 
-        : ""}
-      {!hasUserWon
-        ? <Timer currentTime={currentTime} />
-        : ""}
-      {hasUserWon
-        ? <WinningScreen currentTime={currentTime} restartGame={restartGame}/>
-        : ""}
-    </MainContainer>
-  );
+        <CharacterTile 
+          style={{top:"48%", left:"20%", height:"10%", width:"4.2%"}} 
+          data-testid="waldo"
+          onClick={() => setClickedCharacter('Waldo')}/>
+        <CharacterTile 
+          style={{top:"52.4%", left:"28.3%", height:"2.5%", width:"2%"}} 
+          data-testid="red-ball"
+          onClick={() => setClickedCharacter('Red Ball')}/>
+        <CharacterTile 
+          style={{top:"22%", left:"37.5%", height:"7%", width:"11%"}}
+          data-testid="yellow-ship"
+          onClick={() => setClickedCharacter('Yellow Ship')}/>
+        {HasUserClicked
+          ? <SelectorPopUp 
+            clickPosition={clickPosition} 
+            charactersToFind={charactersToFind}
+            checkIfCharacterWasFound={checkIfCharacterWasFound}
+            setClickedCharacter={setClickedCharacter}/> 
+          : ""}
+        <Timer currentTime={currentTime} />
+      </MainContainer>
+    )
+  else 
+    return (
+      <WinningScreen currentTime={currentTime} restartGame={restartGame}/>
+    )
 }
